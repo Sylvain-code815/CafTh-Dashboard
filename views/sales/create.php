@@ -39,21 +39,6 @@
                     </select>
                 </td>
                 <td><input type="number" name="quantite[]" min="1" value="1"></td>
-            </tr
-        <?php endfor; ?>
-    </table>
-
-    <h2>3. Paiement</h2>
-    <label>Moyen de paiement
-                        <?php foreach ($products as $p): ?>
-                            <option value="<?= e($p['code_produit']) ?>">
-                                <?= e($p['nom_produit']) ?> · <?= price(Product::effectivePrice($p)) ?><?= Product::isSoldByWeight($p) ? ' / 100 g' : '' ?>
-                                · stock <?= e($p['stock']) ?>
-                            </option>
-                        <?php endforeach; ?>
-                    </select>
-                </td>
-                <td><input type="number" name="quantite[]" min="1" value="1"></td>
             </tr>
         <?php endfor; ?>
     </table>

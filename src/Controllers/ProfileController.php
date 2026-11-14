@@ -32,5 +32,11 @@ class ProfileController extends Controller
                 redirect('profile');
             }
         }
+
+        $this->render('profile/index', [
+            'title'    => 'Mon profil',
+            'employee' => $model->find(Auth::id()),
+            'errors'   => $errors,
+        ]);
     }
 }
