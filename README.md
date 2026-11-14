@@ -34,3 +34,39 @@ src/Models/          Requêtes SQL préparées (Product, Order, Client, Employee
 src/helpers.php      Fonctions utilitaires (échappement HTML, redirections…)
 views/               Gabarits HTML par section + layout.php commun
 ```
+
+Seul `public/` est exposé au web : `config/` et `src/` restent hors de portée du navigateur.
+
+## Sécurité
+
+- Mots de passe hachés (bcrypt), requêtes préparées, sorties échappées
+- Jeton CSRF sur tous les formulaires
+- Cookie de session HttpOnly + SameSite Strict, Secure en HTTPS
+- Déconnexion après 30 minutes d'inactivité, accès par rôle (vendeur / admin)
+- En-tête `X-Robots-Tag: noindex` : le dashboard n'est pas indexé
+
+## Déploiement (Plesk)
+
+Site en ligne : https://dashboard-cafthe.slaurent.dev-campus.fr
+
+1. Créer un sous-domaine avec PHP 8.x, racine du document : `…/public`
+2. Déployer le code par Git (branche `master`), puis « Récupérer maintenant » après chaque push
+3. Créer `config/config.php` sur le serveur avec les identifiants de la base de prod
+   (`host` = `localhost`, `port` = `3306`, base partagée avec l'API)
+4. Activer HTTPS (Let's Encrypt) et la redirection HTTP vers HTTPS
+5. Vérifier : la page de connexion s'affiche et `/config/config.php` renvoie une erreur 404
+
+## Planification
+
+| Étape | Tâche | Réalisée le | Temps prévu | Temps passé |
+|---|---|---|---|---|
+| 1 | Structure MVC, configuration, connexion à la base | 13/11/2026 | | |
+| 2 | Authentification (connexion, rôles, expiration de session) | 13/11/2026 | | |
+| 3 | Tableau de bord et KPI | 14/11/2026 | | |
+| 4 | Gestion des produits | 14/11/2026 | | |
+| 5 | Commandes en ligne et statuts | 14/11/2026 | | |
+| 6 | Clients | 14/11/2026 | | |
+| 7 | Vente en magasin | 14/11/2026 | | |
+| 8 | Gestion des vendeurs (admin) | 14/11/2026 | | |
+| 9 | Profil et changement de mot de passe | 14/11/2026 | | |
+| 10 | GitHub, déploiement, documentation, planification | 14/11/2026 | | |
