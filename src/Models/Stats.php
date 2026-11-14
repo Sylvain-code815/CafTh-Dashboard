@@ -3,11 +3,6 @@ namespace App\Models;
 
 use App\Core\Model;
 
-<?php
-namespace App\Models;
-
-use App\Core\Model;
-
 // Indicateurs du tableau de bord (CDC 5.6) : les calculs sont faits par MySQL
 class Stats extends Model
 {
