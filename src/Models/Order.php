@@ -24,6 +24,7 @@ class Order extends Model
         if ($status !== '') {
             $sql .= ' AND c.statut_commande = ?';
             $params[] = $status;
+        }
         if ($mode !== '') {
             $sql .= ' AND c.mode_commande = ?';
             $params[] = $mode;
@@ -40,6 +41,10 @@ class Order extends Model
 
     public function find(int $id): ?array
     {
+        $stmt = $this->db->prepare(
+            'SELECT c.*, cl.nom_client, cl.prenom_client, cl.email, cl.telephone,
+                    a.rue, a.cp, a.ville, a.pays, lv.choix_transporteur, lv.date_livraison
+             FROM commande c
              JOIN client cl ON cl.code_client = c.code_client
              LEFT JOIN adresse a ON a.id_adresse = c.id_adresse_livraison
              LEFT JOIN livraison lv ON lv.num_commande = c.num_commande
