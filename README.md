@@ -58,15 +58,19 @@ Site en ligne : https://dashboard-cafthe.slaurent.dev-campus.fr
 
 ## Planification
 
+J'avais prévu une petite journée de travail (6 h) ; le dashboard m'a pris un après-midi (4 h 20).
+Le temps passé est mesuré d'après les heures des sessions de travail et des commits.
+
 | Étape | Tâche | Réalisée le | Temps prévu | Temps passé |
 |---|---|---|---|---|
-| 1 | Structure MVC, configuration, connexion à la base | 13/11/2026 | | |
-| 2 | Authentification (connexion, rôles, expiration de session) | 13/11/2026 | | |
-| 3 | Tableau de bord et KPI | 14/11/2026 | | |
-| 4 | Gestion des produits | 14/11/2026 | | |
-| 5 | Commandes en ligne et statuts | 14/11/2026 | | |
-| 6 | Clients | 14/11/2026 | | |
-| 7 | Vente en magasin | 14/11/2026 | | |
-| 8 | Gestion des vendeurs (admin) | 14/11/2026 | | |
-| 9 | Profil et changement de mot de passe | 14/11/2026 | | |
-| 10 | GitHub, déploiement, documentation, planification | 14/11/2026 | | |
+| 1 | Structure MVC, configuration, connexion à la base | 13/11/2026 | 1 h | 1 h |
+| 2 | Authentification (connexion, rôles, expiration de session) | 14/11/2026 | 30 min | 20 min |
+| 3 | Tableau de bord et KPI | 14/11/2026 | 30 min | 10 min |
+| 4 | Gestion des produits | 14/11/2026 | 40 min | 20 min |
+| 5 | Commandes en ligne et statuts | 14/11/2026 | 30 min | 5 min |
+| 6 | Clients | 14/11/2026 | 20 min | 10 min |
+| 7 | Vente en magasin | 14/11/2026 | 40 min | 20 min |
+| 8 | Gestion des vendeurs (admin) | 14/11/2026 | 30 min | 15 min |
+| 9 | Profil et changement de mot de passe | 14/11/2026 | 15 min | 5 min |
+| 10 | GitHub, déploiement, documentation, planification | 14/11/2026 | 1 h 05 | 1 h 35 |
+| | **Total** | | **6 h** (une petite journée) | **4 h 20** (un après-midi) |
