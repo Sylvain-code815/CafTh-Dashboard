@@ -6,9 +6,6 @@ use App\Core\Database;
 
 define('ROOT', dirname(__DIR__));
 
-
-define('ROOT', dirname(__DIR__));
-
 require ROOT . '/src/helpers.php';
 
 // Chargement automatique des classes : App\Models\Product -> src/Models/Product.php
