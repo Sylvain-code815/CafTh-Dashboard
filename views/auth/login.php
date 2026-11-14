@@ -3,7 +3,7 @@
     <?php if ($error): ?>
         <p class="flash error"><?= e($error) ?></p>
     <?php endif; ?>
-    <form method="post" action="<?= url('login') ?>">
+    <form method="post" action="<?= url('login') ?>" class="form">
         <?= csrf_field() ?>
         <label>Email
             <input type="email" name="email" value="<?= e($email) ?>" required autofocus>
