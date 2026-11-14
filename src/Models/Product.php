@@ -13,7 +13,7 @@ class Product extends Model
     public const WEIGHT_TYPES = ['Vrac', 'Grain'];
 
     // Référence SKU (CDC 5.3.2) : préfixe de catégorie + numéro sur 4 chiffres, ex. THE-0003
-    public const SKU_PATTERN = '/^[A-Z]{3}-\d{4}$/';
+    public const SKU_PATTERN = '/^[A-Z]{3}-\d{4}$/D'; // D : refuse aussi un retour à la ligne final
     public const SKU_PREFIX_BY_CATEGORY = ['Thé' => 'THE', 'Café' => 'CAF', 'Accessoire' => 'ACC'];
 
     // Liste avec recherche et filtres (CDC 5.3.1 « Lecture »)
