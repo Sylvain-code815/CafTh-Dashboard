@@ -6,7 +6,7 @@ return [
         'port' => 3307,
         'name' => 'cafthe',
         'user' => 'cafthe_api',
-        'pass' => 'qNQuJNDg0lX-WrjgEwOs-pkw',
+        'pass' => 'CHANGE_ME',
     ],
     // Déconnexion automatique après 30 minutes d'inactivité (CDC 5.1)
     'session_timeout' => 1800,
