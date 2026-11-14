@@ -15,7 +15,7 @@ Il utilise la même base de données que l'[API CafThé](https://github.com/Sylv
 3. Lancer le serveur : `php -S localhost:8000 -t public`
 4. Ouvrir `http://localhost:8000`
 
-Le guide d'utilisation pour les vendeurs est dans [docs/MANUEL_VENDEUR.md](docs/MANUEL_VENDEUR.md).
+Le guide d'utilisation pour les vendeurs est dans [docs/SELLER_MANUAL.md](docs/SELLER_MANUAL.md).
 
 ## Comptes de test
 
