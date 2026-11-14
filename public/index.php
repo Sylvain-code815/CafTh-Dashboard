@@ -8,17 +8,7 @@ use App\Core\Database;
 define('ROOT', dirname(__DIR__));
 
 require ROOT . '/src/helpers.php';
-
-// Chargement automatique des classes : App\Models\Product -> src/Models/Product.php
-spl_autoload_register(function (string $class) {
-    $prefix = 'App\\';
-    if (str_starts_with($class, $prefix)) {
-        $file = ROOT . '/src/' . str_replace('\\', '/', substr($class, strlen($prefix))) . '.php';
-        if (is_file($file)) {
-            require $file;
-        }
-    }
-});
+require ROOT . '/src/autoload.php'; // chargement automatique des classes App\...
 
 $config = require ROOT . '/config/config.php';
 Config::init($config);
