@@ -12,6 +12,10 @@ class Product extends Model
     public const UNIT_TYPES = ['Boite', 'Sachet', 'Dosette', 'Unité'];
     public const WEIGHT_TYPES = ['Vrac', 'Grain'];
 
+    // Référence SKU (CDC 5.3.2) : préfixe de catégorie + numéro sur 4 chiffres, ex. THE-0003
+    public const SKU_PATTERN = '/^[A-Z]{3}-\d{4}$/';
+    public const SKU_PREFIX_BY_CATEGORY = ['Thé' => 'THE', 'Café' => 'CAF', 'Accessoire' => 'ACC'];
+
     // Liste avec recherche et filtres (CDC 5.3.1 « Lecture »)
     public function search(string $text = '', string $category = '', bool $withInactive = false): array
     {
@@ -19,9 +23,8 @@ class Product extends Model
         $params = [];
 
         if ($text !== '') {
-            $sql .= ' AND (nom_produit LIKE ? OR origine LIKE ?)';
-            $params[] = "%$text%";
-            $params[] = "%$text%";
+            $sql .= ' AND (nom_produit LIKE ? OR origine LIKE ? OR sku LIKE ?)';
+            array_push($params, "%$text%", "%$text%", "%$text%");
         }
         if ($category !== '') {
             $sql .= ' AND categorie = ?';
@@ -51,20 +54,21 @@ class Product extends Model
         )->fetchAll();
     }
 
-    public function create(array $d): void
+    public function create(array $d): int
     {
         $stmt = $this->db->prepare(
-            'INSERT INTO produit (nom_produit, description, categorie, type_vente, tva, prix_HT, prix_ttc,
+            'INSERT INTO produit (sku, nom_produit, description, categorie, type_vente, tva, prix_HT, prix_ttc,
                                   stock, image, origine, produit_phare, nouveaute, produit_promotion, taux_remise)
-             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)'
+             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)'
         );
         $stmt->execute($this->values($d));
+        return (int) $this->db->lastInsertId();
     }
 
     public function update(int $id, array $d): void
     {
         $stmt = $this->db->prepare(
-            'UPDATE produit SET nom_produit = ?, description = ?, categorie = ?, type_vente = ?, tva = ?,
+            'UPDATE produit SET sku = ?, nom_produit = ?, description = ?, categorie = ?, type_vente = ?, tva = ?,
                     prix_HT = ?, prix_ttc = ?, stock = ?, image = ?, origine = ?, produit_phare = ?,
                     nouveaute = ?, produit_promotion = ?, taux_remise = ?
              WHERE code_produit = ?'
@@ -79,14 +83,31 @@ class Product extends Model
         $stmt->execute([$id]);
     }
 
+    // Une référence SKU ne peut servir qu'à un seul produit ($exceptId : le produit en cours de modification)
+    public function skuExists(string $sku, int $exceptId = 0): bool
+    {
+        $stmt = $this->db->prepare('SELECT 1 FROM produit WHERE sku = ? AND code_produit <> ?');
+        $stmt->execute([$sku, $exceptId]);
+        return (bool) $stmt->fetchColumn();
+    }
+
+    // Référence proposée à la création : préfixe de la catégorie + numéro suivant le plus grand utilisé
+    public function suggestSku(string $category): string
+    {
+        $prefix = self::SKU_PREFIX_BY_CATEGORY[$category] ?? 'ACC';
+        $stmt = $this->db->prepare('SELECT MAX(CAST(SUBSTRING(sku, 5) AS UNSIGNED)) FROM produit WHERE sku LIKE ?');
+        $stmt->execute([$prefix . '-%']);
+        return sprintf('%s-%04d', $prefix, (int) $stmt->fetchColumn() + 1);
+    }
+
     // La TVA et le prix TTC sont calculés ici, jamais saisis (CDC 5.3.2 « calcul auto TTC »)
     private function values(array $d): array
     {
         $vat = self::VAT_BY_CATEGORY[$d['categorie']];
-        $ttc = round($d['prix_HT'] * (1 + $vat / 100), 2);
+        $ttc = self::priceWithVat((float) $d['prix_HT'], $d['categorie']);
 
         return [
-            $d['nom_produit'], $d['description'], $d['categorie'], $d['type_vente'], $vat,
+            $d['sku'], $d['nom_produit'], $d['description'], $d['categorie'], $d['type_vente'], $vat,
             $d['prix_HT'], $ttc, $d['stock'], $d['image'], $d['origine'],
             $d['produit_phare'], $d['nouveaute'], $d['produit_promotion'], $d['taux_remise'],
         ];
@@ -100,6 +121,17 @@ class Product extends Model
             $price *= 1 - $p['taux_remise'] / 100;
         }
         return round($price, 2);
+    }
+
+    // Prix TTC arrondi au centime, d'après le taux de TVA de la catégorie
+    public static function priceWithVat(float $priceHt, string $category): float
+    {
+        return round($priceHt * (1 + self::VAT_BY_CATEGORY[$category] / 100), 2);
+    }
+
+    public static function isValidSku(string $sku): bool
+    {
+        return preg_match(self::SKU_PATTERN, $sku) === 1;
     }
 
     public static function isSoldByWeight(array $p): bool
