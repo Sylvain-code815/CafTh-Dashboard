@@ -8,6 +8,8 @@ class Employee extends Model
     // Colonnes affichables : le mot de passe haché n'est lu que pour la connexion
     private const PUBLIC_COLUMNS = 'num_employe, nom_employe, prenom_employe, email_employe, tel_employe, role';
 
+    public const PASSWORD_RULE = '8 caractères minimum, avec majuscule, minuscule et chiffre';
+
     public function findByEmail(string $email): ?array
     {
         $stmt = $this->db->prepare('SELECT * FROM employe WHERE email_employe = ?');
@@ -70,5 +72,14 @@ class Employee extends Model
     {
         $stmt = $this->db->prepare('DELETE FROM employe WHERE num_employe = ?');
         $stmt->execute([$id]);
+    }
+
+    // Règle commune à la création de compte, au changement et à la réinitialisation du mot de passe
+    public static function isStrongPassword(string $password): bool
+    {
+        return strlen($password) >= 8
+            && preg_match('/[A-Z]/', $password)
+            && preg_match('/[a-z]/', $password)
+            && preg_match('/[0-9]/', $password);
     }
 }
