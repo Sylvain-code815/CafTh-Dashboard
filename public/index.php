@@ -2,6 +2,7 @@
 // Point d'entrée unique (front controller) : toutes les pages passent par ce fichier
 
 use App\Core\Auth;
+use App\Core\Config;
 use App\Core\Database;
 
 define('ROOT', dirname(__DIR__));
@@ -20,6 +21,7 @@ spl_autoload_register(function (string $class) {
 });
 
 $config = require ROOT . '/config/config.php';
+Config::init($config);
 Database::init($config['db']);
 
 // Cookie de session protégé (inaccessible au JavaScript, non envoyé depuis un autre site)
@@ -39,6 +41,8 @@ header('X-Robots-Tag: noindex, nofollow');
 $routes = [
     'login'            => ['AuthController', 'login', 'guest'],
     'logout'           => ['AuthController', 'logout', 'staff'],
+    'forgot-password'  => ['AuthController', 'forgotPassword', 'guest'],
+    'reset-password'   => ['AuthController', 'resetPassword', 'guest'],
     'dashboard'        => ['DashboardController', 'index', 'staff'],
     'products'         => ['ProductController', 'index', 'staff'],
     'products/create'  => ['ProductController', 'create', 'staff'],
