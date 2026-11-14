@@ -13,6 +13,14 @@ function url(string $route, array $params = []): string
     return 'index.php?' . http_build_query(['route' => $route] + $params);
 }
 
+// URL complète, pour un lien envoyé par email : app_url de la configuration,
+// sinon le domaine de la requête en HTTPS (si app_url n'a pas encore été ajouté sur le serveur)
+function absolute_url(string $route, array $params = []): string
+{
+    $base = \App\Core\Config::get('app_url') ?: 'https://' . ($_SERVER['HTTP_HOST'] ?? 'localhost');
+    return rtrim($base, '/') . '/' . url($route, $params);
+}
+
 function redirect(string $route, array $params = []): never
 {
     header('Location: ' . url($route, $params));

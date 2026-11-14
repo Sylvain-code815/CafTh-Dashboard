@@ -1,2 +1,6 @@
 config/config.php
 .idea
+storage/
+vendor/
+.phpunit.cache/
+config/config.test.php

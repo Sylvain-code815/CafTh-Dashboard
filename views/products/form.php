@@ -4,6 +4,15 @@
 <form method="post" class="card form">
     <?= csrf_field() ?>
 
+    <label>Référence SKU (3 lettres, un tiret, 4 chiffres)
+        <input name="sku" value="<?= e($data['sku']) ?>" maxlength="8" pattern="[A-Za-z]{3}-[0-9]{4}" required>
+        <?php if ($suggestions): ?>
+            <small>Prochaines références libres :
+                <?= e(implode(', ', array_map(fn ($cat, $sku) => "$sku ($cat)", array_keys($suggestions), $suggestions))) ?></small>
+        <?php endif; ?>
+        <small class="error"><?= e($errors['sku'] ?? '') ?></small>
+    </label>
+
     <label>Nom
         <input name="nom_produit" value="<?= e($data['nom_produit']) ?>" maxlength="50" required>
         <small class="error"><?= e($errors['nom_produit'] ?? '') ?></small>

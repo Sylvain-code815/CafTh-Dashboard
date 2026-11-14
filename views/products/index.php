@@ -6,7 +6,7 @@
 
 <form method="get" class="filters">
     <input type="hidden" name="route" value="products">
-    <input type="search" name="q" value="<?= e($search) ?>" placeholder="Nom ou origine">
+    <input type="search" name="q" value="<?= e($search) ?>" placeholder="Nom, origine ou SKU">
     <select name="categorie">
         <option value="">Toutes les catégories</option>
         <?php foreach (array_keys(Product::VAT_BY_CATEGORY) as $cat): ?>
@@ -18,10 +18,10 @@
 </form>
 
 <table>
-    <tr><th>Réf.</th><th>Nom</th><th>Catégorie</th><th>Type</th><th>Prix HT</th><th>Prix TTC</th><th>Stock</th><th></th></tr>
+    <tr><th>SKU</th><th>Nom</th><th>Catégorie</th><th>Type</th><th>Prix HT</th><th>Prix TTC</th><th>Stock</th><th></th></tr>
     <?php foreach ($products as $p): ?>
         <tr class="<?= $p['active'] ? '' : 'inactive' ?>">
-            <td><?= e($p['code_produit']) ?></td>
+            <td><?= e($p['sku']) ?></td>
             <td><?= e($p['nom_produit']) ?><?= $p['produit_promotion'] ? ' <span class="badge">-' . e($p['taux_remise']) . ' %</span>' : '' ?></td>
             <td><?= e($p['categorie']) ?></td>
             <td><?= e($p['type_vente']) ?></td>

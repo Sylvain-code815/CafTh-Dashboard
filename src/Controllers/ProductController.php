@@ -3,9 +3,12 @@ namespace App\Controllers;
 
 use App\Core\Controller;
 use App\Models\Product;
+use PDOException;
 
 class ProductController extends Controller
 {
+    private const SKU_TAKEN = 'Cette référence SKU est déjà utilisée par un autre produit';
+
     public function index(): void
     {
         $search = trim($_GET['q'] ?? '');
@@ -39,8 +42,10 @@ class ProductController extends Controller
     // Formulaire commun à l'ajout et à la modification
     private function form(?array $product): void
     {
+        $model = new Product();
         $data = $product ?? [
-            'nom_produit' => '', 'description' => '', 'categorie' => 'Thé', 'type_vente' => 'Boite',
+            'sku' => $model->suggestSku('Thé'), 'nom_produit' => '', 'description' => '',
+            'categorie' => 'Thé', 'type_vente' => 'Boite',
             'prix_HT' => '', 'stock' => 0, 'image' => '', 'origine' => '',
             'produit_phare' => 0, 'nouveaute' => 0, 'produit_promotion' => 0, 'taux_remise' => 0,
         ];
@@ -50,24 +55,45 @@ class ProductController extends Controller
             check_csrf();
             [$data, $errors] = $this->validate($_POST);
 
+            $id = $product ? (int) $product['code_produit'] : 0;
+            if (!isset($errors['sku']) && $model->skuExists($data['sku'], $id)) {
+                $errors['sku'] = self::SKU_TAKEN;
+            }
+
             if (!$errors) {
-                $model = new Product();
-                if ($product) {
-                    $model->update((int) $product['code_produit'], $data);
-                    flash('Produit modifié');
-                } else {
-                    $model->create($data);
-                    flash('Produit ajouté');
+                try {
+                    if ($product) {
+                        $model->update($id, $data);
+                        flash('Produit modifié');
+                    } else {
+                        $model->create($data);
+                        flash('Produit ajouté');
+                    }
+                    redirect('products');
+                } catch (PDOException $e) {
+                    // 23000 = violation de contrainte : SKU enregistré entre-temps par un autre vendeur
+                    if ($e->getCode() !== '23000') {
+                        throw $e;
+                    }
+                    $errors['sku'] = self::SKU_TAKEN;
                 }
-                redirect('products');
+            }
+        }
+
+        // Références proposées pour chaque catégorie (aide à la saisie d'un nouveau produit)
+        $suggestions = [];
+        if (!$product) {
+            foreach (array_keys(Product::SKU_PREFIX_BY_CATEGORY) as $cat) {
+                $suggestions[$cat] = $model->suggestSku($cat);
             }
         }
 
         $this->render('products/form', [
-            'title'   => $product ? 'Modifier un produit' : 'Ajouter un produit',
-            'product' => $product,
-            'data'    => $data,
-            'errors'  => $errors,
+            'title'       => $product ? 'Modifier un produit' : 'Ajouter un produit',
+            'product'     => $product,
+            'data'        => $data,
+            'errors'      => $errors,
+            'suggestions' => $suggestions,
         ]);
     }
 
@@ -85,6 +111,7 @@ class ProductController extends Controller
     private function validate(array $in): array
     {
         $d = [
+            'sku'               => strtoupper(trim($in['sku'] ?? '')),
             'nom_produit'       => trim($in['nom_produit'] ?? ''),
             'description'       => trim($in['description'] ?? ''),
             'categorie'         => $in['categorie'] ?? '',
@@ -100,6 +127,9 @@ class ProductController extends Controller
         ];
         $errors = [];
 
+        if (!Product::isValidSku($d['sku'])) {
+            $errors['sku'] = 'Référence SKU obligatoire, au format ABC-0000 (ex. CAF-0001)';
+        }
         if ($d['nom_produit'] === '' || mb_strlen($d['nom_produit']) > 50) {
             $errors['nom_produit'] = 'Nom obligatoire (50 caractères maximum)';
         }

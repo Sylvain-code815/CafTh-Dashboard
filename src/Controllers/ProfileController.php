@@ -22,8 +22,8 @@ class ProfileController extends Controller
             // Le changement exige l'ancien mot de passe
             if (!$model->checkPassword(Auth::id(), $old)) {
                 $errors['old_password'] = 'Mot de passe actuel incorrect';
-            } elseif (strlen($new) < 8 || !preg_match('/[A-Z]/', $new) || !preg_match('/[a-z]/', $new) || !preg_match('/[0-9]/', $new)) {
-                $errors['new_password'] = '8 caractères minimum, avec majuscule, minuscule et chiffre';
+            } elseif (!Employee::isStrongPassword($new)) {
+                $errors['new_password'] = Employee::PASSWORD_RULE;
             } elseif ($new !== $confirm) {
                 $errors['confirm_password'] = 'Les deux mots de passe ne correspondent pas';
             } else {

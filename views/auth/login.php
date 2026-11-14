@@ -13,4 +13,5 @@
         </label>
         <button>Se connecter</button>
     </form>
+    <p><a href="<?= url('forgot-password') ?>">Mot de passe oublié ?</a></p>
 </section>

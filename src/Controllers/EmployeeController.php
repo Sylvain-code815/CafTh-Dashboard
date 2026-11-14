@@ -53,8 +53,8 @@ class EmployeeController extends Controller
                 $errors['role'] = 'Rôle invalide';
             }
             // Mot de passe obligatoire à la création, facultatif en modification
-            if ((!$employee || $password !== '') && !$this->isStrongPassword($password)) {
-                $errors['password'] = '8 caractères minimum, avec majuscule, minuscule et chiffre';
+            if ((!$employee || $password !== '') && !Employee::isStrongPassword($password)) {
+                $errors['password'] = Employee::PASSWORD_RULE;
             }
 
             if (!$errors) {
@@ -103,13 +103,5 @@ class EmployeeController extends Controller
             }
         }
         redirect('employees');
-    }
-
-    private function isStrongPassword(string $password): bool
-    {
-        return strlen($password) >= 8
-            && preg_match('/[A-Z]/', $password)
-            && preg_match('/[a-z]/', $password)
-            && preg_match('/[0-9]/', $password);
     }
 }
