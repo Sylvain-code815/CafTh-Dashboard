@@ -47,7 +47,7 @@ class AuthController extends Controller
         redirect('login');
     }
 
-    // Mot de passe oublié (CDC 5.1) : envoie un lien temporaire par email
+    // Mot de passe oublié : envoie un lien temporaire par email
     public function forgotPassword(): void
     {
         if (Auth::user()) {

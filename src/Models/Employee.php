@@ -59,7 +59,7 @@ class Employee extends Model
         $stmt->execute([password_hash($password, PASSWORD_BCRYPT), $id]);
     }
 
-    // Vérifie le mot de passe actuel (changement de mot de passe, CDC 5.2)
+    // Vérifie le mot de passe actuel
     public function checkPassword(int $id, string $password): bool
     {
         $stmt = $this->db->prepare('SELECT mdp_employe FROM employe WHERE num_employe = ?');

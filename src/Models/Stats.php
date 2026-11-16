@@ -3,7 +3,7 @@ namespace App\Models;
 
 use App\Core\Model;
 
-// Indicateurs du tableau de bord (CDC 5.6) : les calculs sont faits par MySQL
+// Indicateurs du tableau de bord : les calculs sont faits par MySQL
 class Stats extends Model
 {
     // Chiffre d'affaires du jour, de la semaine, du mois et de l'année

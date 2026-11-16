@@ -11,7 +11,7 @@ class Config
         self::$values = $values;
     }
 
-    // $default est renvoyé si la clé manque (ancien config.php du serveur par exemple)
+    // $default est renvoyé si la clé manque
     public static function get(string $key, mixed $default = null): mixed
     {
         return self::$values[$key] ?? $default;
