@@ -3,7 +3,7 @@ namespace App\Models;
 
 use App\Core\Model;
 
-// Jetons de réinitialisation du mot de passe (CDC 5.1 « lien temporaire sécurisé »)
+// Jetons de réinitialisation du mot de passe
 // Le jeton n'est envoyé que par email ; la base ne garde que son empreinte SHA-256.
 class PasswordReset extends Model
 {
@@ -38,7 +38,7 @@ class PasswordReset extends Model
         $stmt->execute([$accountType, $accountId]);
 
         $token = self::generateToken();
-        // Dates calculées par MySQL (même horloge que l'API, qui partage cette table)
+        // Dates calculées par MySQL
         $stmt = $this->db->prepare(
             'INSERT INTO password_reset (account_type, account_id, token_hash, expires_at)
              VALUES (?, ?, ?, NOW() + INTERVAL ? SECOND)'

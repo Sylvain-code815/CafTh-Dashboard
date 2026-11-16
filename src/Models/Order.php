@@ -7,7 +7,6 @@ use Throwable;
 
 class Order extends Model
 {
-    // Doublon API
     public const STATUS_FLOW = ['pending', 'preparing', 'shipped', 'delivered'];
     public const STORE_PAYMENTS = ['card', 'cash', 'check'];
 

@@ -34,7 +34,7 @@ class Database
         return self::$pdo;
     }
 
-    // Utilisé par les tests d'intégration : connexion à la base de test, dans une transaction annulée après chaque test
+    // Connexion à la base de test, dans une transaction annulée après chaque test
     public static function setConnection(PDO $pdo): void
     {
         self::$pdo = $pdo;

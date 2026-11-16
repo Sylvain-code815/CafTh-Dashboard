@@ -1,7 +1,6 @@
 <?php
 // Crée (ou recrée) la base de test à partir de database/cafthe.sql de l'API.
-// Usage : php tests/create_test_db.php [chemin/vers/cafthe.sql]
-// Le script remplace le nom de base « cafthe » du fichier par celui de la configuration de test.
+// Le nom de base « cafthe » du fichier est remplacé par celui de la configuration de test.
 
 $config = require __DIR__ . '/config.php';
 $db = $config['db'];

@@ -1,5 +1,5 @@
 <?php
-// Point d'entrée unique (front controller) : toutes les pages passent par ce fichier
+// Point d'entrée unique (front controller)
 
 use App\Core\Auth;
 use App\Core\Config;
@@ -8,7 +8,7 @@ use App\Core\Database;
 define('ROOT', dirname(__DIR__));
 
 require ROOT . '/src/helpers.php';
-require ROOT . '/src/autoload.php'; // chargement automatique des classes App\...
+require ROOT . '/src/autoload.php';
 
 $config = require ROOT . '/config/config.php';
 Config::init($config);
@@ -23,7 +23,7 @@ session_set_cookie_params([
 session_start();
 Auth::checkTimeout($config['session_timeout']);
 
-// Dashboard non indexé par les moteurs de recherche (CDC 6.2)
+// Dashboard non indexé par les moteurs de recherche
 header('X-Robots-Tag: noindex, nofollow');
 
 // Table de routage : route => [contrôleur, méthode, accès]

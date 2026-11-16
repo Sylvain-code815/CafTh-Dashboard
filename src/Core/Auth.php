@@ -40,7 +40,7 @@ class Auth
         session_destroy();
     }
 
-    // Déconnexion automatique après une période d'inactivité (CDC 5.1)
+    // Déconnexion automatique après une période d'inactivité
     public static function checkTimeout(int $timeout): void
     {
         if (self::user() && time() - ($_SESSION['last_activity'] ?? 0) > $timeout) {

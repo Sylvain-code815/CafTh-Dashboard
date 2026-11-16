@@ -1,9 +1,7 @@
 <?php
 namespace App\Core;
 
-// Envoi des emails (lien de réinitialisation du mot de passe, CDC 5.1)
-// transport 'mail' : fonction mail() de PHP (serveur Plesk)
-// transport 'log'  : l'email est ajouté à storage/mails.log au lieu d'être envoyé (développement)
+// Envoi des emails (lien de réinitialisation du mot de passe)
 class Mailer
 {
     private string $transport;
@@ -12,7 +10,7 @@ class Mailer
 
     public function __construct(array $config = [])
     {
-        // Valeurs par défaut si la clé 'mail' manque dans config.php
+        // Valeurs par défaut si la clé 'mail' manque
         $host = preg_replace('/:\d+$/', '', $_SERVER['HTTP_HOST'] ?? 'localhost'); // sans le port
         $this->transport = $config['transport'] ?? 'mail';
         $this->from = $config['from'] ?? "no-reply@$host";
@@ -31,7 +29,7 @@ class Mailer
             'Content-Type'              => 'text/plain; charset=UTF-8',
             'Content-Transfer-Encoding' => '8bit',
         ];
-        // Objet encodé pour les accents ; -f fixe l'expéditeur technique (meilleure délivrabilité)
+        // Objet encodé pour les accents ; -f fixe l'expéditeur technique
         return mail($to, mb_encode_mimeheader($subject, 'UTF-8'), $body, $headers, '-f' . $this->from);
     }
 

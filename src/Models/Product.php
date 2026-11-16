@@ -5,18 +5,18 @@ use App\Core\Model;
 
 class Product extends Model
 {
-    // Catégorie => taux de TVA (CDC 5.3.2 : 5,5 % thé/café, 20 % accessoires)
+    // Catégorie => taux de TVA (5,5 % thé/café, 20 % accessoires)
     public const VAT_BY_CATEGORY = ['Thé' => 5.5, 'Café' => 5.5, 'Accessoire' => 20];
 
     // Types de vente à l'unité ; les autres (Vrac, Grain) sont vendus au poids, prix pour 100 g
     public const UNIT_TYPES = ['Boite', 'Sachet', 'Dosette', 'Unité'];
     public const WEIGHT_TYPES = ['Vrac', 'Grain'];
 
-    // Référence SKU (CDC 5.3.2) : préfixe de catégorie + numéro sur 4 chiffres, ex. THE-0003
+    // Référence SKU : préfixe de catégorie + numéro sur 4 chiffres, ex. THE-0003
     public const SKU_PATTERN = '/^[A-Z]{3}-\d{4}$/D'; // D : refuse aussi un retour à la ligne final
     public const SKU_PREFIX_BY_CATEGORY = ['Thé' => 'THE', 'Café' => 'CAF', 'Accessoire' => 'ACC'];
 
-    // Liste avec recherche et filtres (CDC 5.3.1 « Lecture »)
+    // Liste avec recherche et filtres
     public function search(string $text = '', string $category = '', bool $withInactive = false): array
     {
         $sql = 'SELECT * FROM produit WHERE 1 = 1';
@@ -76,7 +76,7 @@ class Product extends Model
         $stmt->execute([...$this->values($d), $id]);
     }
 
-    // Suppression = désactivation, pour garder l'historique des commandes (CDC 5.3.1)
+    // Suppression = désactivation, pour garder l'historique des commandes
     public function toggleActive(int $id): void
     {
         $stmt = $this->db->prepare('UPDATE produit SET active = 1 - active WHERE code_produit = ?');
@@ -100,7 +100,7 @@ class Product extends Model
         return sprintf('%s-%04d', $prefix, (int) $stmt->fetchColumn() + 1);
     }
 
-    // La TVA et le prix TTC sont calculés ici, jamais saisis (CDC 5.3.2 « calcul auto TTC »)
+    // La TVA et le prix TTC sont calculés ici, jamais saisis
     private function values(array $d): array
     {
         $vat = self::VAT_BY_CATEGORY[$d['categorie']];
@@ -113,7 +113,7 @@ class Product extends Model
         ];
     }
 
-    // Prix réellement payé : remise déduite si le produit est en promotion (même règle que l'API)
+    // Prix réellement payé : remise déduite si le produit est en promotion
     public static function effectivePrice(array $p): float
     {
         $price = (float) $p['prix_ttc'];

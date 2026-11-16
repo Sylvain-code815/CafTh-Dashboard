@@ -53,7 +53,7 @@ class ProductRulesTest extends TestCase
 
     public function testVatRatesFollowTheSpecification(): void
     {
-        // CDC 5.3.2 : 5,5 % pour le thé et le café, 20 % pour les accessoires
+        // 5,5 % pour le thé et le café, 20 % pour les accessoires
         $this->assertSame(['Thé' => 5.5, 'Café' => 5.5, 'Accessoire' => 20], Product::VAT_BY_CATEGORY);
     }
 
