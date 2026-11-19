@@ -57,13 +57,15 @@ class ClientController extends Controller
             } elseif ($model->emailExists($data['email'])) {
                 $errors['email'] = 'Un client utilise déjà cet email';
             }
-            if (!preg_match('/^[0-9 +.]{10,15}$/', $data['telephone'])) {
-                $errors['telephone'] = 'Téléphone invalide';
+            // Même format que l'API : le client le ressaisira pour activer son compte
+            $data['telephone'] = preg_replace('/[ .]/', '', $data['telephone']);
+            if (!preg_match('/^0\d{9}$/', $data['telephone'])) {
+                $errors['telephone'] = 'Téléphone invalide (10 chiffres, ex. 0612345678)';
             }
 
             if (!$errors) {
                 $id = $model->create($data, Auth::id());
-                flash('Client créé. Il pourra activer son compte sur le site avec son email.');
+                flash('Client créé. Il activera son compte sur le site (« Activer mon compte ») avec son email et son téléphone.');
 
                 // Création rapide depuis la vente en magasin : on y retourne avec le client choisi
                 if (isset($_GET['from_sale'])) {
