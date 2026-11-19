@@ -27,7 +27,7 @@
             <td><?= $o['mode_commande'] === 'web' ? 'En ligne' : 'Magasin' ?></td>
             <td><?= e(PAYMENT_LABELS[$o['mode_paiement']] ?? $o['mode_paiement']) ?></td>
             <td><?= price($o['total']) ?></td>
-            <td><span class="status <?= e($o['statut_commande']) ?>"><?= e(ORDER_STATUS[$o['statut_commande']] ?? $o['statut_commande']) ?></span></td>
+            <td><span class="status <?= e($o['statut_commande']) ?>"><?= e(order_status_label($o)) ?></span></td>
             <td><a href="<?= url('orders/show', ['id' => $o['num_commande']]) ?>">Détail</a></td>
         </tr>
     <?php endforeach; ?>

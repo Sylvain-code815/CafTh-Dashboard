@@ -8,9 +8,9 @@ class OrderController extends Controller
 {
     public function index(): void
     {
-        // Par défaut : les commandes en ligne
+        // Par défaut : tous les canaux, pour retrouver aussi les ventes en magasin
         $status = $_GET['statut'] ?? '';
-        $mode = $_GET['mode'] ?? 'web';
+        $mode = $_GET['mode'] ?? '';
         $client = trim($_GET['client'] ?? '');
 
         $this->render('orders/index', [

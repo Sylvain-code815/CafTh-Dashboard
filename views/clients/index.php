@@ -16,7 +16,7 @@
             <td><?= e($c['prenom_client'] . ' ' . $c['nom_client']) ?></td>
             <td><?= e($c['email']) ?></td>
             <td><?= e($c['telephone']) ?></td>
-            <td><?= $c['compte_actif'] ? 'Activé' : 'Pas encore activé' ?></td>
+            <td><?= $c['compte_actif'] ? 'Activé' : 'À activer par le client' ?></td>
             <td><a href="<?= url('clients/show', ['id' => $c['code_client']]) ?>">Fiche</a></td>
         </tr>
     <?php endforeach; ?>

@@ -9,7 +9,11 @@
         <p><?= e($client['email']) ?></p>
         <p><?= e($client['telephone']) ?></p>
         <p>Client depuis le <?= e(date('d/m/Y', strtotime($client['created_at']))) ?></p>
-        <p>Compte en ligne : <?= $client['compte_actif'] ? 'activé' : 'pas encore activé' ?></p>
+        <p>Compte en ligne : <?= $client['compte_actif'] ? 'activé' : 'à activer par le client' ?></p>
+        <?php if (!$client['compte_actif']): ?>
+            <p class="hint">Aucun email n'est envoyé : sur le site, le client choisit « Activer mon compte »
+                et saisit son email et ce numéro de téléphone pour créer son mot de passe.</p>
+        <?php endif; ?>
     </section>
 
     <section class="card">
@@ -32,7 +36,7 @@
                 <td><?= e($o['num_commande']) ?></td>
                 <td><?= e(date('d/m/Y', strtotime($o['date_commande']))) ?></td>
                 <td><?= $o['mode_commande'] === 'web' ? 'En ligne' : 'Magasin' ?></td>
-                <td><?= e(ORDER_STATUS[$o['statut_commande']] ?? $o['statut_commande']) ?></td>
+                <td><?= e(order_status_label($o)) ?></td>
                 <td><?= price($o['total']) ?></td>
                 <td><a href="<?= url('orders/show', ['id' => $o['num_commande']]) ?>">Détail</a></td>
             </tr>
