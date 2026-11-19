@@ -31,7 +31,9 @@
                     <select name="produit[]">
                         <option value="">—</option>
                         <?php foreach ($products as $p): ?>
-                            <option value="<?= e($p['code_produit']) ?>">
+                            <option value="<?= e($p['code_produit']) ?>"
+                                    data-price="<?= e(Product::effectivePrice($p)) ?>"
+                                    data-vat="<?= e($p['tva']) ?>">
                                 <?= e($p['nom_produit']) ?> · <?= price(Product::effectivePrice($p)) ?><?= Product::isSoldByWeight($p) ? ' / 100 g' : '' ?>
                                 · stock <?= e($p['stock']) ?>
                             </option>
@@ -52,6 +54,39 @@
         </select>
     </label>
 
-    <p>Le total HT, la TVA et le total TTC sont calculés à l'enregistrement, avec les prix de la base.</p>
+    <h2>4. Total</h2>
+    <p class="totals" id="sale-total">
+        Total HT : <span data-total="ht">0,00 €</span><br>
+        TVA : <span data-total="vat">0,00 €</span><br>
+        <strong>Total TTC : <span data-total="ttc">0,00 €</span></strong>
+    </p>
+    <p class="hint">Estimation à vérifier avec le client : le montant enregistré est recalculé avec les prix de la base.</p>
     <button>Enregistrer la vente</button>
 </form>
+
+<script>
+// Total affiché en direct, avant l'enregistrement de la vente
+(function () {
+    var form = document.querySelector('form.form');
+    var euro = new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR' });
+
+    function refresh() {
+        var ttc = 0, ht = 0;
+        form.querySelectorAll('select[name="produit[]"]').forEach(function (select) {
+            var option = select.selectedOptions[0];
+            var quantity = parseInt(select.closest('tr').querySelector('input[name="quantite[]"]').value, 10);
+            if (!option || !option.dataset.price || !(quantity > 0)) return;
+            var line = parseFloat(option.dataset.price) * quantity;
+            ttc += line;
+            ht += line / (1 + parseFloat(option.dataset.vat) / 100);
+        });
+        form.querySelector('[data-total="ht"]').textContent = euro.format(ht);
+        form.querySelector('[data-total="vat"]').textContent = euro.format(ttc - ht);
+        form.querySelector('[data-total="ttc"]').textContent = euro.format(ttc);
+    }
+
+    form.addEventListener('input', refresh);
+    form.addEventListener('change', refresh);
+    refresh();
+})();
+</script>

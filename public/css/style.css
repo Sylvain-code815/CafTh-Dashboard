@@ -150,3 +150,6 @@ small.error {
 .totals {
     text-align: right; line-height: 1.8;
 }
+.hint {
+    color: #666; font-size: .9em;
+}
