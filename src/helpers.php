@@ -75,6 +75,15 @@ const ORDER_STATUS = [
     'delivered' => 'Livrée',
 ];
 
+// Une vente en magasin est enregistrée « delivered » : le client repart avec ses produits
+function order_status_label(array $order): string
+{
+    if ($order['mode_commande'] === 'store' && $order['statut_commande'] === 'delivered') {
+        return 'Remise en magasin';
+    }
+    return ORDER_STATUS[$order['statut_commande']] ?? $order['statut_commande'];
+}
+
 const PAYMENT_LABELS = [
     'card'     => 'Carte bancaire',
     'cash'     => 'Espèces',

@@ -13,7 +13,7 @@ foreach ($order['lignes'] as $l) {
 $shipping = $order['total'] - $totalTtc; // frais de livraison éventuels (commande web)
 
 $index = array_search($order['statut_commande'], Order::STATUS_FLOW, true);
-$next = Order::STATUS_FLOW[$index + 1] ?? null;
+$next = $order['mode_commande'] === 'web' ? (Order::STATUS_FLOW[$index + 1] ?? null) : null;
 ?>
 <div class="page-head">
     <h1>Commande n°<?= e($order['num_commande']) ?></h1>
@@ -27,7 +27,7 @@ $next = Order::STATUS_FLOW[$index + 1] ?? null;
         <p>Canal : <?= $order['mode_commande'] === 'web' ? 'En ligne' : 'Magasin' ?></p>
         <p>Paiement : <?= e(PAYMENT_LABELS[$order['mode_paiement']] ?? $order['mode_paiement']) ?>
             <?= $order['date_paiement'] ? '(payée)' : '(non payée)' ?></p>
-        <p>Statut : <span class="status <?= e($order['statut_commande']) ?>"><?= e(ORDER_STATUS[$order['statut_commande']]) ?></span></p>
+        <p>Statut : <span class="status <?= e($order['statut_commande']) ?>"><?= e(order_status_label($order)) ?></span></p>
 
         <?php if ($next): ?>
             <form method="post" action="<?= url('orders/status', ['id' => $order['num_commande']]) ?>">

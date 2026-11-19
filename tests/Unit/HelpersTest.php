@@ -25,6 +25,13 @@ class HelpersTest extends TestCase
         }
     }
 
+    public function testStoreSaleIsShownAsHandedOverNotDelivered(): void
+    {
+        $this->assertSame('Remise en magasin', order_status_label(['mode_commande' => 'store', 'statut_commande' => 'delivered']));
+        $this->assertSame('Livrée', order_status_label(['mode_commande' => 'web', 'statut_commande' => 'delivered']));
+        $this->assertSame('En attente', order_status_label(['mode_commande' => 'web', 'statut_commande' => 'pending']));
+    }
+
     public function testEscapeProtectsAgainstXss(): void
     {
         $this->assertSame('&lt;script&gt;alert(&#039;x&#039;)&lt;/script&gt;', e("<script>alert('x')</script>"));
